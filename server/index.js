@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const router = express.Router();
 const cors = require("cors");
 const path = require("path");
 const {
@@ -17,6 +18,8 @@ const {
   deleteList,
   deleteTask,
 } = require("./controller.js");
+const { registerUser, loginUser, getMe } = require("./userController");
+const { protect } = require("./authMiddleware");
 app.use(express.json());
 app.use(cors());
 //Entries
@@ -35,6 +38,10 @@ app.put("/tasks/:task_id", updateTask);
 app.delete("/boards/:board_id", deleteBoard);
 app.delete("/lists/:list_id", deleteList);
 app.delete("/tasks/:task_id", deleteTask);
+
+app.post("/users", registerUser);
+app.post("/users/login", loginUser);
+app.get("/users/me", protect);
 
 const port = process.env.PORT || 4005;
 app.listen(port, () => console.log(`up on ${port}`));
