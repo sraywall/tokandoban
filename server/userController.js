@@ -85,7 +85,6 @@ module.exports = {
           bcrypt.compareSync(password, dbRes[0][0].password)
         ) {
           const { user_id, user_name, email, password } = dbRes[0][0];
-          // console.log("hashed password: ", dbRes[0][0].password);
           console.log({ user_id, user_name, email, password });
           res.status(200).send({
             user_id,
@@ -100,8 +99,5 @@ module.exports = {
       })
       .catch((err) => console.log(err));
   },
-  getMe: (req, res) => {
-    console.log("user data display");
-    res.status(200).send("whoa!");
-  },
+  getMe: (req, res) => {},
 };

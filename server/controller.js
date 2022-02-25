@@ -17,10 +17,12 @@ const sequelize = new Sequelize(DATABASE_URL, {
 
 module.exports = {
   getBoards: (req, res) => {
+    const { user_id } = req.params;
     sequelize
       .query(
         `SELECT *
-        FROM boards;
+        FROM boards
+        WHERE user_id = ${user_id};
       `
       )
       .then((dbRes) => {
@@ -29,10 +31,13 @@ module.exports = {
       .catch((err) => console.log(err));
   },
   getLists: (req, res) => {
+    const { board_id } = req.params;
+
     sequelize
       .query(
         `SELECT *
-        FROM lists;
+        FROM lists
+        WHERE board_id = ${board_id};
       `
       )
       .then((dbRes) => {
@@ -41,10 +46,12 @@ module.exports = {
       .catch((err) => console.log(err));
   },
   getTasks: (req, res) => {
+    const { list_id } = req.params;
     sequelize
       .query(
         `SELECT *
-        FROM tasks;
+        FROM tasks
+        WHERE list_id =${list_id};
       `
       )
       .then((dbRes) => {
@@ -58,11 +65,13 @@ module.exports = {
     sequelize
       .query(
         `insert into boards (user_id,board_name)
-        values (${user_id},'${board_name}');
+        values (${user_id},'${board_name}')
+        returning *;
         `
       )
       .then((dbRes) => {
-        res.status(201).send(dbRes[0]);
+        console.log(dbRes);
+        res.status(201).send(dbRes[0][0]);
       })
       .catch((err) => console.log(err));
   },
@@ -72,7 +81,8 @@ module.exports = {
     sequelize
       .query(
         `insert into lists (board_id,list_name,list_index)
-        values (${board_id},'${list_name}',${list_index});
+        values (${board_id},'${list_name}',${list_index})
+        returning *;
         `
       )
       .then((dbRes) => {
@@ -86,7 +96,8 @@ module.exports = {
     sequelize
       .query(
         `insert into tasks (list_id,description,task_index)
-        values (${list_id},'${description}',${task_index});
+        values (${list_id},'${description}',${task_index})
+        returning *;
         `
       )
       .then((dbRes) => {

@@ -23,9 +23,9 @@ const { protect } = require("./authMiddleware");
 app.use(express.json());
 app.use(cors());
 //Entries
-app.get("/boards", getBoards);
-app.get("/lists", getLists);
-app.get("/tasks", getTasks);
+app.get("/boards/:user_id", getBoards);
+app.get("/lists/:board_id", getLists);
+app.get("/tasks/:list_id", getTasks);
 
 app.post("/boards/:user_id", createBoard);
 app.post("/lists/:board_id", createList);
