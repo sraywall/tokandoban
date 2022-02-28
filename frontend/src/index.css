@@ -91,21 +91,118 @@ h3 {
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
-
-.goal {
+.board:hover {
+  background-color: #777;
+}
+.board {
   background-color: #f4f4f4;
   margin: 10px 0;
   padding: 20px 0 10px;
   position: relative;
 }
 
-.goal .close {
+.board .close {
   position: absolute;
   top: 10px;
   right: 15px;
   cursor: pointer;
   border: none;
   background: none;
+}
+.boardView {
+  height: 92%;
+  display: flex;
+  overflow-x: auto;
+}
+
+.list {
+  background: #f4f4f4;
+  flex-shrink: 0;
+  width: 272px;
+  height: fit-content;
+  margin: 10px;
+  margin-right: 0;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.listclose {
+  /* position: absolute; */
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  /* display: none; */
+  color: #f4f4f4;
+}
+.listclose:hover {
+  color: #000;
+}
+.list-name {
+  /* cursor: pointer; */
+  text-align: left;
+  font-weight: 900;
+  padding: 10px;
+  overflow-wrap: break-word;
+}
+
+.addlist {
+  width: 272px;
+  margin: 20px;
+  flex-shrink: 0;
+  position: relative;
+  padding-top: 20px;
+}
+
+.addlist .close {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.addlistbtn {
+  width: 272px;
+  margin: 10px;
+  flex-shrink: 0;
+}
+.task {
+  position: relative;
+  cursor: pointer;
+  background: white;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 0 rgba(9, 45, 66, 0.25);
+  font-size: 15px;
+  overflow-wrap: break-word;
+  min-height: 18px;
+}
+.add-task .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+.toggle-add-task {
+  cursor: pointer;
+  padding: 10px;
+  color: #6b808c;
+  border-radius: 0 0 5px 5px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-add-task:hover {
+  background-color: rgba(9, 45, 66, 0.13);
+  color: #17394d;
 }
 
 .form,

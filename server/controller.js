@@ -46,12 +46,13 @@ module.exports = {
       .catch((err) => console.log(err));
   },
   getTasks: (req, res) => {
-    const { list_id } = req.params;
+    const { board_id } = req.params;
     sequelize
       .query(
-        `SELECT *
-        FROM tasks
-        WHERE list_id =${list_id};
+        `select tasks.task_id,tasks.list_id,tasks.description,tasks.task_index
+        from tasks
+        join lists on tasks.list_id = lists.list_id
+        where board_id = ${board_id} ;
       `
       )
       .then((dbRes) => {
@@ -86,7 +87,7 @@ module.exports = {
         `
       )
       .then((dbRes) => {
-        res.status(201).send(dbRes[0]);
+        res.status(201).send(dbRes[0][0]);
       })
       .catch((err) => console.log(err));
   },
@@ -101,7 +102,7 @@ module.exports = {
         `
       )
       .then((dbRes) => {
-        res.status(201).send(dbRes[0]);
+        res.status(201).send(dbRes[0][0]);
       })
       .catch((err) => console.log(err));
   },
@@ -154,12 +155,14 @@ module.exports = {
     const { board_id } = req.params;
     sequelize
       .query(
-        `DELETE FROM boards WHERE board_id = ${board_id};
+        `DELETE FROM boards WHERE board_id = ${board_id}
+        returning *;
         DELETE FROM lists WHERE board_id = ${board_id};
       `
       )
       .then((dbRes) => {
-        res.status(200).send(dbRes[0]);
+        console.log(dbRes[0]);
+        res.status(200).send(dbRes[0][0]);
       })
       .catch((err) => console.log(err));
   },
@@ -169,11 +172,12 @@ module.exports = {
       .query(
         `
         DELETE FROM tasks WHERE list_id = ${list_id};
-        DELETE FROM lists WHERE list_id = ${list_id};
+        DELETE FROM lists WHERE list_id = ${list_id}
+        returning *;
       `
       )
       .then((dbRes) => {
-        res.status(200).send(dbRes[0]);
+        res.status(200).send(dbRes[0][0]);
       })
       .catch((err) => console.log(err));
   },

@@ -21,8 +21,15 @@ const getBoards = async (user_id) => {
   return response.data;
 };
 
+//delete board
+const deleteBoard = async (board_id) => {
+  const response = await axios.delete(API_URL + `${board_id}`);
+  return response.data;
+};
+
 const boardService = {
   createBoard,
   getBoards,
+  deleteBoard,
 };
 export default boardService;

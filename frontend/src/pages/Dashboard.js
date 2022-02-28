@@ -12,7 +12,7 @@ function Dashboard() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { boards, isLoading, isError, message } = useSelector(
-    (state) => state.board
+    (state) => state.boards
   );
 
   useEffect(() => {
@@ -31,24 +31,25 @@ function Dashboard() {
   if (isLoading) {
     return <Spinner />;
   }
+
   return (
     <>
       <section className="heading">
         <h1>Welcome {user && user.user_name}</h1>
         <p>Dashboard</p>
       </section>
-      <BoardForm />
       <section className="content">
         {boards.length > 0 ? (
           <div className="goals">
             {boards.map((board) => (
-              <BoardItem key={board._id} board={board} />
+              <BoardItem key={board.board_id} board={board} />
             ))}
           </div>
         ) : (
-          <h3>You have not set any goals</h3>
+          <h3>You have not made any boards</h3>
         )}
       </section>
+      <BoardForm />
     </>
   );
 }

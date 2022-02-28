@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createBoard } from "../features/boards/boardSlice";
+import { FaPlusCircle } from "react-icons/fa";
 
 function BoardForm() {
   const [text, setText] = useState("");
@@ -16,8 +17,8 @@ function BoardForm() {
     <section className="form">
       <form onSubmit={onSubmit}>
         <div className="form-group">
-          <label htmlFor="text">Board</label>
           <input
+            placeholder="Enter board name"
             type="text"
             name="text"
             id="text"
@@ -27,6 +28,7 @@ function BoardForm() {
         </div>
         <div className="form-group">
           <button className="btn btn-block" type="submit">
+            <FaPlusCircle />
             Add Board
           </button>
         </div>

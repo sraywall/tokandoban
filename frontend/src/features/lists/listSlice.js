@@ -1,20 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import boardService from "./boardService";
+import listService from "./listService";
 
 const initialState = {
-  boards: [],
+  lists: [],
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: "",
 };
 
-export const createBoard = createAsyncThunk(
-  "boards/create",
-  async (boardData, thunkAPI) => {
+export const createList = createAsyncThunk(
+  "lists/create",
+  async (listData, thunkAPI) => {
     try {
-      const user_id = thunkAPI.getState().auth.user.user_id;
-      return await boardService.createBoard(boardData, user_id);
+      // const board_id = thunkAPI.getState().auth.user.user_id;
+      const index = thunkAPI.getState().lists.lists.length;
+      console.log("list index: " + index);
+      console.log("Board Id: " + listData.board_id);
+
+      listData.list_index = index;
+      return await listService.createList(listData, listData.board_id);
     } catch (error) {
       const message =
         (error.response &&
@@ -27,31 +32,13 @@ export const createBoard = createAsyncThunk(
   }
 );
 
-//get boards
-export const getBoards = createAsyncThunk(
-  "boards/getAll",
-  async (_, thunkAPI) => {
-    try {
-      const user_id = thunkAPI.getState().auth.user.user_id;
-      return await boardService.getBoards(user_id);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-export const deleteBoard = createAsyncThunk(
-  "boards/delete",
+//get lists
+export const getLists = createAsyncThunk(
+  "lists/getAll",
   async (board_id, thunkAPI) => {
     try {
-      const user_id = thunkAPI.getState().auth.user.user_id;
-      return await boardService.deleteBoard(board_id);
+      // const board_id = thunkAPI.getState().auth.user.user_id;
+      return await listService.getLists(board_id);
     } catch (error) {
       const message =
         (error.response &&
@@ -64,51 +51,69 @@ export const deleteBoard = createAsyncThunk(
   }
 );
 
-export const boardSlice = createSlice({
-  name: "board",
+export const deleteList = createAsyncThunk(
+  "lists/delete",
+  async (list_id, thunkAPI) => {
+    try {
+      // const user_id = thunkAPI.getState().auth.user.user_id;
+      return await listService.deleteList(list_id);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const listSlice = createSlice({
+  name: "list",
   initialState,
   reducers: {
     reset: (state) => initialState,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createBoard.pending, (state) => {
+      .addCase(createList.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(createBoard.fulfilled, (state, action) => {
+      .addCase(createList.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.boards.push(action.payload);
+        state.lists.push(action.payload);
       })
-      .addCase(createBoard.rejected, (state, action) => {
+      .addCase(createList.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getBoards.pending, (state) => {
+      .addCase(getLists.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getBoards.fulfilled, (state, action) => {
+      .addCase(getLists.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.boards = action.payload;
+        state.lists = action.payload;
       })
-      .addCase(getBoards.rejected, (state, action) => {
+      .addCase(getLists.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(deleteBoard.pending, (state) => {
+      .addCase(deleteList.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteBoard.fulfilled, (state, action) => {
+      .addCase(deleteList.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.boards = state.boards.filter(
-          (board) => board.board_id !== action.payload.board_id
+        state.lists = state.lists.filter(
+          (list) => list.list_id !== action.payload.list_id
         );
       })
-      .addCase(deleteBoard.rejected, (state, action) => {
+      .addCase(deleteList.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
@@ -116,5 +121,5 @@ export const boardSlice = createSlice({
   },
 });
 
-export const { reset } = boardSlice.actions;
-export default boardSlice.reducer;
+export const { reset } = listSlice.actions;
+export default listSlice.reducer;

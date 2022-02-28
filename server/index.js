@@ -25,7 +25,7 @@ app.use(cors());
 //Entries
 app.get("/boards/:user_id", getBoards);
 app.get("/lists/:board_id", getLists);
-app.get("/tasks/:list_id", getTasks);
+app.get("/tasks/:board_id", getTasks);
 
 app.post("/boards/:user_id", createBoard);
 app.post("/lists/:board_id", createList);
