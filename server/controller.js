@@ -37,7 +37,8 @@ module.exports = {
       .query(
         `SELECT *
         FROM lists
-        WHERE board_id = ${board_id};
+        WHERE board_id = ${board_id}
+        ORDER BY list_index;
       `
       )
       .then((dbRes) => {
@@ -128,11 +129,12 @@ module.exports = {
       .query(
         `UPDATE lists
         SET list_name = '${list_name}',list_index = ${list_index}
-        WHERE list_id = ${list_id};
+        WHERE list_id = ${list_id}
+        returning *;
         `
       )
       .then((dbRes) => {
-        res.status(200).send(dbRes[0]);
+        res.status(200).send(dbRes[0][0]);
       })
       .catch((err) => console.log(err));
   },

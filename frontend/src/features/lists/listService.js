@@ -21,9 +21,15 @@ const deleteList = async (list_id) => {
   return response.data;
 };
 
+const updateList = async (listData, list_id) => {
+  const response = await axios.put(API_URL + `${list_id}`, listData);
+
+  return response.data;
+};
 const listService = {
   createList,
   getLists,
   deleteList,
+  updateList,
 };
 export default listService;
