@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* border: red 1px solid; */
 }
 
 body {
@@ -112,6 +113,8 @@ h3 {
 .boardView {
   height: 92%;
   display: flex;
+  /* flex-wrap: wrap; */
+  /* justify-content: space-between; */
   overflow-x: auto;
 }
 
@@ -179,6 +182,9 @@ h3 {
   font-size: 15px;
   overflow-wrap: break-word;
   min-height: 18px;
+}
+.Card:hover {
+  background: #f5f6f7;
 }
 .add-task .close {
   position: absolute;

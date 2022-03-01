@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { reset, getLists, moveList } from "../features/lists/listSlice";
-import { getTasks } from "../features/tasks/taskSlice";
+import { getTasks, moveTask } from "../features/tasks/taskSlice";
 import { FaPlusCircle } from "react-icons/fa";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -19,7 +19,11 @@ function Board() {
   const { lists, isLoading, isError, message } = useSelector(
     (state) => state.lists
   );
-  const { tasks } = useSelector((state) => state.tasks);
+  const {
+    tasks,
+    // isError,
+    // message,
+  } = useSelector((state) => state.tasks);
   const { state } = useLocation();
   const [addingList, SetAddingList] = useState(false);
 
@@ -27,6 +31,7 @@ function Board() {
     if (isError) {
       console.log(message);
     }
+
     if (!user) {
       navigate("/login");
     }
@@ -45,32 +50,71 @@ function Board() {
     SetAddingList(!addingList);
   };
 
-  const handleDragEnd = (result) => {
-    console.log(result);
-    console.log("source:" + result.source.index);
-    console.log("destination:" + result.destination.index);
-    const cloneLists = lists.map((lst) => {
-      return { ...lst };
-    });
-    const source = result.source.index;
-    const destination = result.destination.index;
-    const [temp] = cloneLists.splice(+source, 1);
-    cloneLists.splice(+destination, 0, temp);
-    cloneLists.forEach((lst, index) => (lst.list_index = index));
-    dispatch(
-      moveList({
-        ...lists[+source],
-        list_index: destination,
-        source,
-        destination,
-        cloneLists,
-      })
-    );
+  const handleDragEnd = ({ source, destination, type }) => {
+    if (type === "COLUMN") {
+      // Prevent update if nothing has changed
+      if (source.index !== destination.index) {
+        console.log("source:", source);
+        console.log("destination:", destination);
+        const cloneLists = lists.map((lst) => {
+          return { ...lst };
+        });
+        const [temp] = cloneLists.splice(+source.index, 1);
+        cloneLists.splice(+destination.index, 0, temp);
+        cloneLists.forEach((lst, index) => (lst.list_index = index));
+        dispatch(
+          moveList({
+            ...lists[+source.index],
+            list_index: destination.index,
+            source: source.index,
+            destination: destination.index,
+            cloneLists,
+          })
+        );
+      }
+      return;
+    }
+
+    //Move task
+    if (
+      source.index !== destination.index ||
+      source.droppableId !== destination.droppableId
+    ) {
+      console.log(tasks);
+      console.log("moved a task!");
+      console.log("destination", destination);
+      console.log("source", source);
+      let destination_list = tasks
+        .map((tsk) => {
+          return { ...tsk };
+        })
+        .filter((tsk) => tsk.list_id === +destination.droppableId);
+      let source_list = tasks
+        .filter((tsk) => tsk.list_id === +source.droppableId)
+        .map((tsk) => {
+          return { ...tsk };
+        });
+      let [temp] = source_list.splice(+source.index, 1);
+      temp.list_id = +destination.droppableId;
+      if (source.droppableId === destination.droppableId) {
+        source_list.splice(+destination.index, 0, temp);
+        destination_list = source_list;
+      } else {
+        destination_list.splice(+destination.index, 0, temp);
+      }
+      source_list.forEach((tsk, index) => (tsk.task_index = index));
+      destination_list.forEach((tsk, index) => (tsk.task_index = index));
+      console.log("destination list: ", destination_list);
+      console.log("source list: ", source_list);
+      dispatch(
+        moveTask({ destination_list, source_list, destination, source })
+      );
+    }
   };
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <h1>{state.board_name}</h1>
-      <Droppable droppableId="droppable" direction="horizontal">
+      <Droppable droppableId="board" direction="horizontal" type="COLUMN">
         {(provided) => (
           <div
             className="boardView"

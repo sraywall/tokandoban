@@ -50,7 +50,42 @@ export const getTasks = createAsyncThunk(
     }
   }
 );
-
+export const moveTask = createAsyncThunk(
+  "tasks/move",
+  async ({ destination_list, source_list, destination, source }, thunkAPI) => {
+    Promise.all(
+      destination_list.map((tsk) => taskService.updateTask(tsk, tsk.task_id))
+    )
+      .then(() => {})
+      .catch((error) => {
+        console.log("error");
+        console.log(error);
+        const message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        return thunkAPI.rejectWithValue(message);
+      });
+    Promise.all(
+      source_list.map((tsk) => taskService.updateTask(tsk, tsk.task_id))
+    )
+      .then(() => {})
+      .catch((error) => {
+        console.log("error");
+        console.log(error);
+        const message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        return thunkAPI.rejectWithValue(message);
+      });
+    return { destination_list, source_list, destination, source };
+  }
+);
 // export const deleteBoard = createAsyncThunk(
 //   "boards/delete",
 //   async (board_id, thunkAPI) => {
@@ -101,6 +136,40 @@ export const taskSlice = createSlice({
       .addCase(getTasks.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(moveTask.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(moveTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        const { destination_list, source_list, destination, source } =
+          action.payload;
+        console.log("slice destination_list:", destination_list);
+        console.log("slice source_list:", source_list);
+        console.log("slice source:", source);
+        console.log("slice destination:", destination);
+        state.tasks = state.tasks.filter(
+          (tsk) => tsk.list_id !== +source.droppableId
+        );
+        console.log("filter_source:", state.tasks);
+        state.tasks.push(...source_list);
+
+        if (source.droppableId !== destination.droppableId) {
+          //different lists
+          state.tasks = state.tasks.filter(
+            (tsk) => tsk.list_id !== +destination.droppableId
+          );
+          console.log("filter_destination", state.tasks);
+          state.tasks.push(...destination_list);
+        }
+        console.log("at the end:", state.tasks);
+      })
+      .addCase(moveTask.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        console.log(state.message);
         state.message = action.payload;
       });
     // .addCase(deleteBoard.pending, (state) => {

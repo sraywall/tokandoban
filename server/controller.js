@@ -53,7 +53,8 @@ module.exports = {
         `select tasks.task_id,tasks.list_id,tasks.description,tasks.task_index
         from tasks
         join lists on tasks.list_id = lists.list_id
-        where board_id = ${board_id} ;
+        where board_id = ${board_id} 
+        ORDER BY task_index;
       `
       )
       .then((dbRes) => {
@@ -140,11 +141,12 @@ module.exports = {
   },
   updateTask: (req, res) => {
     const { task_id } = req.params;
-    const { description, task_index } = req.body;
+    const { description, task_index, list_id } = req.body;
     sequelize
       .query(
         `UPDATE tasks
-        SET description = '${description}',task_index = ${task_index}
+        SET description = '${description}',task_index = ${task_index},
+        list_id=${list_id}
         WHERE task_id = ${task_id};
         `
       )

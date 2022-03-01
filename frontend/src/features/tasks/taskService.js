@@ -8,6 +8,11 @@ const createTask = async (taskData, list_id) => {
   return response.data;
 };
 
+const updateTask = async (taskData, task_id) => {
+  const response = await axios.put(API_URL + `${task_id}`, taskData);
+  return response.data;
+};
+
 //get board tasks
 const getTasks = async (board_id) => {
   const response = await axios.get(API_URL + `${board_id}`);
@@ -24,6 +29,7 @@ const getTasks = async (board_id) => {
 const taskService = {
   createTask,
   getTasks,
+  updateTask,
   // deleteList,
 };
 export default taskService;
