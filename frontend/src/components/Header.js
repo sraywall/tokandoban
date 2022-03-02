@@ -1,4 +1,5 @@
 import React from "react";
+import ToKanDo from "../ToKanDo.png";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,7 +18,9 @@ function Header() {
   return (
     <header className="header">
       <div className="logo">
-        <Link to="/">ToKanDoBan</Link>
+        <Link className="logo-link" to="/">
+          <img className="logo-image" src={ToKanDo} />
+        </Link>
       </div>
       <ul>
         {user ? (

@@ -86,7 +86,20 @@ h3 {
 .heading p {
   color: #828282;
 }
-
+.logo {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-image {
+  height: 40px;
+  width: auto;
+}
+.logo-link {
+  /* height: fit-content;
+  width: fit-content; */
+}
 .goals {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -96,7 +109,7 @@ h3 {
   background-color: #777;
 }
 .board {
-  background-color: #f4f4f4;
+  background-color: #e6e6e6;
   margin: 10px 0;
   padding: 20px 0 10px;
   position: relative;
@@ -119,7 +132,7 @@ h3 {
 }
 
 .list {
-  background: #f4f4f4;
+  background: #e6e6e6;
   flex-shrink: 0;
   width: 272px;
   height: fit-content;
@@ -136,7 +149,7 @@ h3 {
   border: none;
   background: none;
   /* display: none; */
-  color: #f4f4f4;
+  color: #e6e6e6;
 }
 .listclose:hover {
   color: #000;
