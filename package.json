@@ -2,10 +2,10 @@
   "name": "specializations_capstone",
   "version": "1.0.0",
   "description": "",
-  "main": "server/index.js",
+  "main": "./server/index.js",
   
   "scripts": {
-    "start": "node server/index.js && npm build",
+    "start": "node ./server/index.js && npm build",
     "client": "npm start --prefix frontend",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
